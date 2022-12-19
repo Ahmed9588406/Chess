@@ -1,3 +1,4 @@
+import random
 import pygame
 from numpy.core.defchararray import center
 
@@ -15,6 +16,7 @@ class Game:
         self.board = Board()
         self.dragger = Drager()
         self.config = Config()
+        self.mode = 'pvp'
 
     # Show methods
     # surface = screen
@@ -125,6 +127,46 @@ class Game:
     # for the next turn
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
+
+    def get_random_piece(self):
+        pieces = self.board.get_peaces(self.next_player)
+        return random.choice(list(pieces.items()))
+
+    def get_random_move(self):
+        piece, pos = self.get_random_piece()
+        self.board.calc_moves(piece, pos[0], pos[1], bool=True)
+        i = 0
+
+        while piece.moves == [] and i < 100:
+            piece, pos = self.get_random_piece()
+            self.board.calc_moves(piece, pos[0], pos[1], bool=True)
+            i+=1
+
+        print(piece.name, piece.color)
+        try:
+            move = random.choice(piece.moves)
+        except:
+            return piece, None
+
+            
+        if not self.board.in_check(piece, move):
+            return piece, move
+
+        return piece, None
+
+    def show_win_msg(self, surface, winner):
+        # label
+        lbl = self.config.font.render(f'{winner} won!', 1, (255, 255, 255))
+        # position
+        lbl_pos = (WIDTH // 2 - lbl.get_width() // 2, HEIGHT // 2 - lbl.get_height() // 2)
+        # rectangle spanning the width of the screen and height of the label
+        rect = (0, HEIGHT // 2 - lbl.get_height() // 2, WIDTH, lbl.get_height())
+        # blit
+        pygame.draw.rect(surface, (0, 0, 0), rect)
+        # blit
+        surface.blit(lbl, lbl_pos)
+
+
 
 
     def set_hover(self, row, col):

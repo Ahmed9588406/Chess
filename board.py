@@ -521,3 +521,13 @@ class Board:
         self.squares[row_other][4] = Square(row_other, 4, King(color))
        # self.squares[5][3] = Square(5, 3, King(color)) -> testing if the king moves valid for the enemy pieces
        # self.squares[2][3] = Square(2, 3, King(color)) -> testing if the king will eat his own ally
+
+    def get_peaces(self, color):
+        peaces = {}
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.squares[row][col].has_piece():
+                    piece = self.squares[row][col].piece
+                    if piece.color == color:
+                        peaces[piece] = (row,col)
+        return peaces
