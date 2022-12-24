@@ -5,6 +5,7 @@ from numpy.core.defchararray import center
 from const import *
 from board import *
 from dragger import Drager
+from ai import AI
 from piece import *
 from move import *
 from config import *
@@ -17,6 +18,8 @@ class Game:
         self.dragger = Drager()
         self.config = Config()
         self.mode = 'pvp'
+        self.gameOver = False
+        self.ai = AI(self, self.board)
 
     # Show methods
     # surface = screen

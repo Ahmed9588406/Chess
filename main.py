@@ -1,3 +1,4 @@
+from math import inf
 import pygame
 import sys
 
@@ -100,10 +101,19 @@ class Main:
                             # checking if the move is a valid one
                             if board.valid_move(dragger.piece, move):
                                 captured = board.squares[released_row][released_col].has_piece()
+                                if captured:
+                                    piecee = board.squares[released_row][released_col].piece
+                                    if piecee.color == 'white':
+                                        board.scorewhite -= piecee.value
+                                        print(board.scorewhite, board.scoreblack)
+                                    else:
+                                        board.scoreblack -= piecee.value
+                                        print(board.scorewhite, board.scoreblack)
                                 board.move(dragger.piece, move)
                                 board.set_true_en_passant(piece)
                                 # sounds
                                 game.play_sound(captured)
+
                                 # show methods
                                 game.show_bg(screen)
                                 game.show_last_move(screen)
@@ -178,6 +188,14 @@ class Main:
                                 # checking if the move is a valid one
                                 if board.valid_move(dragger.piece, move):
                                     captured = board.squares[released_row][released_col].has_piece()
+                                    if captured:
+                                        piecee = board.squares[released_row][released_col].piece
+                                        if piecee.color == 'white':
+                                            board.scorewhite -= piecee.value
+                                            print(board.scorewhite, board.scoreblack)
+                                        else:
+                                            board.scoreblack -= piecee.value
+                                            print(board.scorewhite, board.scoreblack)
                                     board.move(dragger.piece, move)
                                     board.set_true_en_passant(piece)
                                     # sounds
@@ -202,6 +220,7 @@ class Main:
 
                         if move is None:
                             # show a winning message for white player and exit the game
+                            game.gameOver = True
                             game.show_win_msg(screen, 'white')
                             pygame.display.update()
                             pygame.time.delay(3000)
@@ -211,11 +230,22 @@ class Main:
                             game = self.game
                             board = self.game.board
                             dragger = self.game.dragger
+                            game.gameOver = False
+                            board.scorewhite = 1039
+                            board.scoreblack = 1039
 
 
 
                         if board.valid_move(piece, move):
                             captured = board.squares[move.final.row][move.final.col].has_piece()
+                            if captured:
+                                piecee = board.squares[released_row][released_col].piece
+                                if piecee.color == 'white':
+                                    board.scorewhite -= piecee.value
+                                    print(board.scorewhite, board.scoreblack)
+                                else:
+                                    board.scoreblack -= piecee.value
+                                    print(board.scorewhite, board.scoreblack)
                             board.move(piece, move)
                             board.set_true_en_passant(piece)
                             # sounds
@@ -226,7 +256,139 @@ class Main:
                             game.show_pieces(screen)
                             # next turn
                             game.next_turn()
+                elif mode == 'ai':
+                    # white player
+                    if game.next_player == 'white':
+                        # click
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            dragger.update_mouse(event.pos)# showing the pos of the clicking mouse
+                            clicked_row = dragger.mousey // SQUSIZE
+                            clicked_col = dragger.mousex // SQUSIZE
 
+                            # if clicked square has a piece
+                            if board.squares[clicked_row][clicked_col].has_piece():
+
+                                piece = board.squares[clicked_row][clicked_col].piece
+                                # valid piece color
+                                if piece.color == game.next_player:
+                                    board.calc_moves(piece, clicked_row, clicked_col, bool=True)
+                                    dragger.save_initiial(event.pos)
+                                    dragger.drag_piece(piece)
+                                    # show methods
+                                    game.show_bg(screen)
+                                    game.show_last_move(screen)
+                                    game.show_moves(screen)
+                                    game.show_pieces(screen)
+
+
+
+                        # Mouse Motion
+                        elif event.type == pygame.MOUSEMOTION:
+                            motion_row = event.pos[1] // SQUSIZE
+                            motion_col = event.pos[0] // SQUSIZE
+                            game.set_hover(motion_row, motion_col)
+
+                            if dragger.dragging:
+                                dragger.update_mouse(event.pos)
+                                # fixing the shadow behind the selected piece
+                                game.show_bg(screen)
+                                # fixing the all pices that have been copied
+                                # show methods
+                                game.show_last_move(screen)
+                                game.show_moves(screen)
+                                game.show_pieces(screen)
+                                game.show_hover(screen)
+                                dragger.update_blit(screen)
+
+
+
+                        # Click release
+                        elif event.type == pygame.MOUSEBUTTONUP:
+
+                            if dragger.dragging:
+                                dragger.update_mouse(event.pos)
+
+                                released_row = dragger.mousey // SQUSIZE
+                                released_col = dragger.mousex // SQUSIZE
+
+
+                                # create possible moves
+                                initial = Square(dragger.initial_row, dragger.initial_col)
+                                final = Square(released_row, released_col)
+                                move = Move(initial, final)
+
+
+                                # checking if the move is a valid one
+                                if board.valid_move(dragger.piece, move):
+                                    captured = board.squares[released_row][released_col].has_piece()
+                                    if captured:
+                                        piecee = board.squares[released_row][released_col].piece
+                                        if piecee.color == 'white':
+                                            board.scorewhite -= piecee.value
+                                            print(board.scorewhite, board.scoreblack)
+                                        else:
+                                            board.scoreblack -= piecee.value
+                                            print(board.scorewhite, board.scoreblack)
+                                    board.move(dragger.piece, move)
+                                    board.set_true_en_passant(piece)
+                                    # soundsa
+                                    game.play_sound(captured)
+                                    # show methods
+                                    game.show_bg(screen)
+                                    game.show_last_move(screen)
+                                    game.show_pieces(screen)
+                                    # next turn
+                                    game.next_turn()
+
+
+                            dragger.undrag_piece()
+                    elif game.next_player == 'black':
+                        #get ai move for black
+                        piece, move = game.ai.minimax(board, 3, -inf, inf, True, "black")[0]
+                    
+                        game.show_bg(screen)
+                        game.show_last_move(screen)
+                        game.show_moves(screen)
+                        game.show_pieces(screen)
+
+                        if move is None:
+                            # show a winning message for white player and exit the game
+                            game.gameOver = True
+                            game.show_win_msg(screen, 'white')
+                            pygame.display.update()
+                            pygame.time.delay(3000)
+                            game.reset()
+                            game.mode = 'pvp'
+                            mode = 'pvp'
+                            game = self.game
+                            board = self.game.board
+                            dragger = self.game.dragger
+                            game.gameOver = False
+                            board.scorewhite = 1039
+                            board.scoreblack = 1039
+
+
+
+                        if board.valid_move(piece, move):
+                            captured = board.squares[move.final.row][move.final.col].has_piece()
+                            if captured:
+                                piecee = board.squares[released_row][released_col].piece
+                                if piecee.color == 'white':
+                                    board.scorewhite -= piecee.value
+                                    print(board.scorewhite, board.scoreblack)
+                                else:
+                                    board.scoreblack -= piecee.value
+                                    print(board.scorewhite, board.scoreblack)
+                            board.move(piece, move)
+                            board.set_true_en_passant(piece)
+                            # sounds
+                            game.play_sound(captured)
+                            # show methods
+                            game.show_bg(screen)
+                            game.show_last_move(screen)
+                            game.show_pieces(screen)
+                            # next turn
+                            game.next_turn()
 
                 # Key press
                 if event.type == pygame.KEYDOWN:
@@ -251,6 +413,8 @@ class Main:
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
+                        board.scorewhite = 1039
+                        board.scoreblack = 1039
                     
                     if event.key == pygame.K_h:
                         game.reset()
@@ -259,14 +423,18 @@ class Main:
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
+                        board.scorewhite = 1039
+                        board.scoreblack = 1039
 
                     if event.key == pygame.K_a:
                         game.reset()
-                        game.mode = 'a'
-                        mode = 'a'
+                        game.mode = 'ai'
+                        mode = 'ai'
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
+                        board.scorewhite = 1039
+                        board.scoreblack = 1039 
 
 
                 # Quit application

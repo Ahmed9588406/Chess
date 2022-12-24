@@ -15,6 +15,8 @@ class Board:
         self._creat()
         self._add_piece('white')
         self._add_piece("black")
+        self.scorewhite = 1039
+        self.scoreblack = 1039
 
 
     def move(self, piece, move, testing=False):
@@ -69,6 +71,12 @@ class Board:
     def check_promotion(self, piece, final):
         if final.row == 0 or final.row == 7:
             self.squares[final.row][final.col].piece = Queen(piece.color)
+            if piece.color == 'white':
+                self.scorewhite += 9
+                print(self.scorewhite, "white", self.scoreblack)
+            else:
+                self.scoreblack += 9
+                print(self.scorewhite, self.scoreblack, "black")
 
     def castling(self, initial, final):
         return abs(initial.col - final.col) == 2
@@ -105,6 +113,17 @@ class Board:
     def valid_move(self, piece, move):
         return move in piece.moves
 
+    def get_moves(self, color, board):
+        moves = {}
+        for row in range(ROWS):
+            for col in range(COLS):
+                if board.squares[row][col].has_piece():
+                    piece = board.squares[row][col].piece
+                    if piece.color == color:
+                        board.calc_moves(piece, row, col)
+                        if len(piece.moves) > 0:
+                            moves[piece] = piece.moves
+        return moves
 
     def calc_moves(self, piece, row, col, bool=True):
         """
@@ -531,3 +550,21 @@ class Board:
                     if piece.color == color:
                         peaces[piece] = (row,col)
         return peaces
+
+    def get_score(self, board):
+        score = 0
+        for row in range(ROWS):
+            for col in range(COLS):
+                if board.squares[row][col].has_piece():
+                    piece = board.squares[row][col].piece
+                    if piece.color == "black":
+                        score += piece.value
+                    elif piece.color == "white":
+                        score -= piece.value
+                    
+        return score
+        
+
+    def reset_score(self):
+        self.white_score = 1039
+        self.black_score = 1039
