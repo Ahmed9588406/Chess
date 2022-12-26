@@ -344,6 +344,8 @@ class Main:
                             dragger.undrag_piece()
                     elif game.next_player == 'black':
                         #get ai move for black
+                        
+
                         piece, move = game.ai.minimax(board, 3, -inf, inf, True, "black")[0]
                     
                         game.show_bg(screen)
@@ -366,6 +368,7 @@ class Main:
                             game.gameOver = False
                             board.scorewhite = 1039
                             board.scoreblack = 1039
+                            continue
 
 
 

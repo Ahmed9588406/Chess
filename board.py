@@ -113,14 +113,15 @@ class Board:
     def valid_move(self, piece, move):
         return move in piece.moves
 
-    def get_moves(self, color, board):
+    # get all the valid moves of all the pieces of a specific color
+    def get_all_moves(self, color):
         moves = {}
         for row in range(ROWS):
             for col in range(COLS):
-                if board.squares[row][col].has_piece():
-                    piece = board.squares[row][col].piece
+                if self.squares[row][col].has_piece():
+                    piece = self.squares[row][col].piece
                     if piece.color == color:
-                        board.calc_moves(piece, row, col)
+                        self.calc_moves(piece, row, col)
                         if len(piece.moves) > 0:
                             moves[piece] = piece.moves
         return moves
