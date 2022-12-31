@@ -109,11 +109,11 @@ class Main:
                                         released_col
                                     ].piece
                                     if piecee.color == "white":
-                                        board.scorewhite -= piecee.value
-                                        print(board.scorewhite, board.scoreblack)
+                                        board.whiteScore -= piecee.value
+                                        print(board.whiteScore, board.blackScore)
                                     else:
-                                        board.scoreblack -= piecee.value
-                                        print(board.scorewhite, board.scoreblack)
+                                        board.blackScore -= piecee.value
+                                        print(board.whiteScore, board.blackScore)
                                 board.move(dragger.piece, move)
                                 board.set_true_en_passant(piece)
                                 # sounds
@@ -199,11 +199,11 @@ class Main:
                                             released_col
                                         ].piece
                                         if piecee.color == "white":
-                                            board.scorewhite -= piecee.value
-                                            print(board.scorewhite, board.scoreblack)
+                                            board.whiteScore -= piecee.value
+                                            print(board.whiteScore, board.blackScore)
                                         else:
-                                            board.scoreblack -= piecee.value
-                                            print(board.scorewhite, board.scoreblack)
+                                            board.blackScore -= piecee.value
+                                            print(board.whiteScore, board.blackScore)
                                     board.move(dragger.piece, move)
                                     board.set_true_en_passant(piece)
                                     # sounds
@@ -238,8 +238,8 @@ class Main:
                             board = self.game.board
                             dragger = self.game.dragger
                             game.gameOver = False
-                            board.scorewhite = 1039
-                            board.scoreblack = 1039
+                            board.whiteScore = 1039
+                            board.blackScore = 1039
 
                         if board.valid_move(piece, move):
                             captured = board.squares[move.final.row][
@@ -248,11 +248,11 @@ class Main:
                             if captured:
                                 piecee = board.squares[released_row][released_col].piece
                                 if piecee.color == "white":
-                                    board.scorewhite -= piecee.value
-                                    print(board.scorewhite, board.scoreblack)
+                                    board.whiteScore -= piecee.value
+                                    print(board.whiteScore, board.blackScore)
                                 else:
-                                    board.scoreblack -= piecee.value
-                                    print(board.scorewhite, board.scoreblack)
+                                    board.blackScore -= piecee.value
+                                    print(board.whiteScore, board.blackScore)
                             board.move(piece, move)
                             board.set_true_en_passant(piece)
                             # sounds
@@ -335,11 +335,11 @@ class Main:
                                             released_col
                                         ].piece
                                         if piecee.color == "white":
-                                            board.scorewhite -= piecee.value
-                                            print(board.scorewhite, board.scoreblack)
+                                            board.whiteScore -= piecee.value
+                                            print(board.whiteScore, board.blackScore)
                                         else:
-                                            board.scoreblack -= piecee.value
-                                            print(board.scorewhite, board.scoreblack)
+                                            board.blackScore -= piecee.value
+                                            print(board.whiteScore, board.blackScore)
                                     board.move(dragger.piece, move)
                                     board.set_true_en_passant(piece)
                                     # soundsa
@@ -356,7 +356,7 @@ class Main:
                         # get ai move for black
 
                         piece, move = game.ai.minimax(
-                            board, 3, -inf, inf, True, "black"
+                            board, 3, -inf, inf, False, "black"
                         )[0]
 
                         game.show_bg(screen)
@@ -377,8 +377,8 @@ class Main:
                             board = self.game.board
                             dragger = self.game.dragger
                             game.gameOver = False
-                            board.scorewhite = 1039
-                            board.scoreblack = 1039
+                            board.whiteScore = 1039
+                            board.blackScore = 1039
                             continue
 
                         if board.valid_move(piece, move):
@@ -388,11 +388,11 @@ class Main:
                             if captured:
                                 piecee = board.squares[released_row][released_col].piece
                                 if piecee.color == "white":
-                                    board.scorewhite -= piecee.value
-                                    print(board.scorewhite, board.scoreblack)
+                                    board.whiteScore -= piecee.value
+                                    print(board.whiteScore, board.blackScore)
                                 else:
-                                    board.scoreblack -= piecee.value
-                                    print(board.scorewhite, board.scoreblack)
+                                    board.blackScore -= piecee.value
+                                    print(board.whiteScore, board.blackScore)
                             board.move(piece, move)
                             board.set_true_en_passant(piece)
                             # sounds
@@ -563,8 +563,8 @@ class Main:
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
-                        board.scorewhite = 49
-                        board.scoreblack = -49
+                        board.whiteScore = 1039
+                        board.blackScore = 1039
 
                     if event.key == pygame.K_h:
                         game.reset()
@@ -573,8 +573,8 @@ class Main:
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
-                        board.scorewhite = 49
-                        board.scoreblack = -49
+                        board.whiteScore = 1039
+                        board.blackScore = 1039
 
                     if event.key == pygame.K_a:
                         game.reset()
@@ -583,8 +583,18 @@ class Main:
                         game = self.game
                         board = self.game.board
                         dragger = self.game.dragger
-                        board.scorewhite = 49
-                        board.scoreblack = -49
+                        board.whiteScore = 1039
+                        board.blackScore = 1039
+
+                    if event.key == pygame.K_i:
+                        game.reset()
+                        game.mode = "ai"
+                        mode = "ai"
+                        game = self.game
+                        board = self.game.board
+                        dragger = self.game.dragger
+                        board.whiteScore = 1039
+                        board.blackScore = 1039
 
                 # Quit application
                 if event.type == pygame.QUIT:

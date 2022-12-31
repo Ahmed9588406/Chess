@@ -9,7 +9,7 @@ class AI():
         self.board = board
 
     def evaluate(self, board, color):
-        return board.scorewhite - board.scoreblack if color == 'white' else board.scoreblack - board.scorewhite
+        return board.getWhiteScore(board) - board.getBlackScore(board) if color == 'white' else board.getBlackScore(board) - board.getWhiteScore(board)
 
     def minimax(self, board, depth, alpha, beta, maximizingPlayer, maximizingColor):
         if depth == 0 or self.game.gameOver:
@@ -33,11 +33,11 @@ class AI():
                         if captured:
                             piecee = tempBoard.squares[move.final.row][move.final.col].piece
                             if piecee.color == 'white' and tempPiece.color == 'black':
-                                tempBoard.scorewhite -= piecee.value
-                                print(tempBoard.scorewhite, tempBoard.scoreblack)
+                                tempBoard.whiteScore -= piecee.value
+                                print(tempBoard.whiteScore, tempBoard.blackScore)
                             elif piecee.color == 'black' and tempPiece.color == 'white':
-                                tempBoard.scoreblack -= piecee.value
-                                print(tempBoard.scorewhite, tempBoard.scoreblack)
+                                tempBoard.blackScore -= piecee.value
+                                print(tempBoard.whiteScore, tempBoard.blackScore)
                             else:
                                 continue
                         tempBoard.move(tempPiece, move)
@@ -68,11 +68,11 @@ class AI():
                         if captured:
                             piecee = tempBoard.squares[move.final.row][move.final.col].piece
                             if piecee.color == 'white' and tempPiece.color == 'black':
-                                tempBoard.scorewhite -= piecee.value
-                                print(tempBoard.scorewhite, tempBoard.scoreblack)
+                                tempBoard.whiteScore -= piecee.value
+                                print(tempBoard.whiteScore, tempBoard.blackScore)
                             elif piecee.color == 'black' and tempPiece.color == 'white':
-                                tempBoard.scoreblack -= piecee.value
-                                print(tempBoard.scorewhite, tempBoard.scoreblack)
+                                tempBoard.blackScore -= piecee.value
+                                print(tempBoard.whiteScore, tempBoard.blackScore)
                             else:
                                 continue
                         tempBoard.move(tempPiece, move)

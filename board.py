@@ -17,8 +17,8 @@ class Board:
         self._add_piece("white")
         self._add_piece("black")
         self.moves_series = []
-        self.whiteScore = 49
-        self.blackScore = -49
+        self.whiteScore = 1039
+        self.blackScore = 1039
 
     def UndoMove(self, piece):
         move = self.moves_series.pop()
@@ -80,11 +80,11 @@ class Board:
         if final.row == 0 or final.row == 7:
             self.squares[final.row][final.col].piece = Queen(piece.color)
             if piece.color == "white":
-                self.scorewhite += 9
-                print(self.scorewhite, "white", self.scoreblack)
+                self.whiteScore += 9
+                print(self.whiteScore, "white", self.blackScore)
             else:
-                self.scoreblack += 9
-                print(self.scorewhite, self.scoreblack, "black")
+                self.blackScore += 9
+                print(self.whiteScore, self.blackScore, "black")
 
     def castling(self, initial, final):
         return abs(initial.col - final.col) == 2
@@ -591,8 +591,8 @@ class Board:
         return score
 
     def reset_score(self):
-        self.whiteScore = 49
-        self.blackScore = -49
+        self.whiteScore = 1039
+        self.blackScore = 1039
 
     def AllPossible(self, color):
         moves = {}
@@ -605,7 +605,3 @@ class Board:
                     tmp.append(move)
             moves[piece] = tmp
         return moves
-
-    def reset_score(self):
-        self.white_score = 49
-        self.black_score = -49
